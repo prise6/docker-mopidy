@@ -12,6 +12,7 @@ RUN set -ex \
         gstreamer1.0-alsa \
         gstreamer1.0-plugins-bad \
         python-crypto \
+        git \
  && curl -L https://apt.mopidy.com/mopidy.gpg | apt-key add - \
  && curl -L https://apt.mopidy.com/mopidy.list -o /etc/apt/sources.list.d/mopidy.list \
  && apt-get update \
@@ -49,13 +50,28 @@ COPY mopidy.conf /config/mopidy.conf
 # Copy the pulse-client configuratrion.
 COPY pulse-client.conf /etc/pulse/client.conf
 
+# backend 
+RUN pip install Mopidy-Iris
+
+# alsa
+#RUN apt-get update \
+# && apt-get install -y alsa-utils python-alsaaudio \
+# && pip install Mopidy-ALSAMixer \
+# && apt-get clean \
+# && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache
+
+# Copy the alsa-client configuration.
+# COPY asound.conf /etc/asound.conf
+COPY airplane-landing_daniel_simion.wav /config/sound.wav
+
+
 # Allows any user to run mopidy, but runs by default as a randomly generated UID/GID.
 ENV HOME=/var/lib/mopidy
 RUN set -ex \
  && usermod -u 84044 mopidy \
  && groupmod -g 84044 audio \
  && chown mopidy:audio -R $HOME /entrypoint.sh \
- && chmod go+rwX -R $HOME /entrypoint.sh
+&& chmod go+rwX -R $HOME /entrypoint.sh
 
 # Runs as mopidy user by default.
 USER mopidy

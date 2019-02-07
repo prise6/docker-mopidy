@@ -3,21 +3,22 @@
 name=mopidy_last
 
 
-if [[ $(docker ps -f "name=$name" --format '{{.Names}}') = $name ]]
+if [[ $(docker ps -a -f "name=$name" --format '{{.Names}}') = $name ]]
 then
 	# container existe
 	if [[ $(docker ps -f "name=$name" -f "status=running" --format '{{.Names}}') = $name ]]
 	then
 		# container tourne déjà
-		echo "$name already running"
+		echo "$name container already running"
 	else
 		# container doit etre relancé
-		echo "Container stopped"
+		echo "$name container restarts"
 		docker container stop $name \
 		&& docker container start $name
+		sleep 1
 	fi
 else
-	echo "launch run"
+	echo "$name container is created"
 	docker run -d \
 	--user $UID:$GID \
 	-v /run/user/$UID/pulse:/run/user/105/pulse \
@@ -27,6 +28,3 @@ else
 	--name $name \
 	-v "/home/prise6/dockers/docker-mopidy/mopidy.conf:/config/mopidy.conf" mopidy:latest
 fi
-
-
-

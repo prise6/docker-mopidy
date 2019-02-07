@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Mopidy
+Name[fr]=Mopidy
+GenericName=Music
+GenericName[fr]=Musique
+Comment=Start Spotify and co
+Comment[fr]=Lancer Spotify et tout
+Exec=/home/prise6/dockers/docker-mopidy/desktop_launch.sh
+StartupNotify=true
+Type=Application
+Categories=Audio;Music
